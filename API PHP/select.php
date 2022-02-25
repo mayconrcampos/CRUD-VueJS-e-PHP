@@ -1,50 +1,40 @@
 <?php
 
-//Cabeçalhos obrigatorios
+// Cabeçalhos obrigatórios
+
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Methods: GET,PUT,POST,DELETE");
 
 // Incluir conexão
+
 include_once("./conexao.php");
 
-$resposta_json = file_get_contents("php://input");
 
-$dados = json_decode($resposta_json, true);
 
-if($dados){
-    // INSERT - Gravando no banco de dados
+$select = "SELECT * FROM produtos ORDER BY id DESC";
 
-    $query = "DELETE FROM produtos WHERE id=?";
-    $deleta_produto = $conn->prepare($query);
+$resultado = $conn->prepare($select);
 
-    $deleta_produto->bindValue(1, $dados['produto']['id'], PDO::PARAM_STR);
-    $deleta_produto->execute();
+$resultado->execute();
 
+
+if($resultado and $resultado->rowCount() > 0){
     
-    if($deleta_produto->rowCount()){
-        $resposta = [
-            "erro" => false,
-            "mensagem" => "Produto cadastrado com sucesso;"
-        ];
-    }else{
-        $resposta = [
-            "erro" => true,
-            "mensagem" => "ERRO! Produto não cadastrado;"
+    while($linha_produto = $resultado->fetch(PDO::FETCH_ASSOC)){
+        extract($linha_produto);
+
+        $lista_produtos["records"][$id] = [
+            "id" => $id,
+            "titulo" => $titulo,
+            "descricao" =>$descricao
         ];
     }
 
-    
+    // resposta com status 200 - tudo certo
+    http_response_code(200);
 
-}else{
+    // Retornar os produtos em formato json
+    echo json_encode($lista_produtos);
 
-    $resposta = [
-        "erro" => true,
-        "mensagem" => "ERRO tudo."
-    ];
 }
 
-
-http_response_code(200);
-echo json_encode($resposta);
