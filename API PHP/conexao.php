@@ -2,7 +2,7 @@
 
 $host = "localhost";
 $user = "root";
-$senha = "5DaJ10.,Xw,8";
+$senha = "";
 $dbname = "crude";
 $porta = "3306";
 
