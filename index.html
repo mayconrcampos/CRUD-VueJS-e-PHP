@@ -122,8 +122,16 @@
                 }
             },
 
+
+            preencheCampo(id, titulo, descricao){
+                this.id = parseInt(id)
+                this.titulo = titulo
+                this.descricao = descricao
+            },
+            
+
             async selectTabela(){
-                const select = await axios.get("http://localhost/celkePHP/API%20PHP/")
+                const select = await axios.get("http://localhost/celkePHP/API%20PHP/select.php")
                         .then(response => {
                             this.produtos = response.data.records
                             console.log(response)
@@ -151,7 +159,7 @@
 
                         console.log(response.data.mensagem)
 
-                        const recarrega = await axios.get("http://localhost/celkePHP/API%20PHP/")
+                        const recarrega = await axios.get("http://localhost/celkePHP/API%20PHP/select.php")
                             .then(response => {
                                 this.produtos = response.data.records
 
@@ -186,13 +194,7 @@
                 })
             },
 
-            preencheCampo(id, titulo, descricao){
-                this.id = parseInt(id)
-                this.titulo = titulo
-                this.descricao = descricao
-            },
-
-
+            
             async editarProduto(){
                 const edita = await axios.post("http://localhost/celkePHP/API%20PHP/update.php", {
                     produto: {
@@ -204,7 +206,7 @@
              
                     
                     console.log(response)
-                    const recarrega = await axios.get("http://localhost/celkePHP/API%20PHP/")
+                    const recarrega = await axios.get("http://localhost/celkePHP/API%20PHP/select.php")
                             .then(response => {
                                 this.produtos = response.data.records
 
@@ -225,9 +227,6 @@
           }
           
         })
-
-  
-
 
         app.mount('#app')
     </script>
